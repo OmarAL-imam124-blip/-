@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📚 مكتبتي ومنهجي</title>
 
-    <!-- 1. Tailwind CSS (للتصميم السريع والاحترافي) -->
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- 2. Google Fonts (Amiri للعناوين, Cairo للنصوص) -->
@@ -13,21 +13,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- 3. Tailwind Configuration (لتخصيص الألوان والخطوط) -->
+    <!-- 3. مكتبة html2canvas (لأخذ لقطة شاشة للتحضير) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- 4. Tailwind Configuration (الوضع الداكن هو الافتراضي) -->
     <script>
         tailwind.config = {
-            darkMode: 'class', // تفعيل الوضع الداكن عبر كلاس
+            darkMode: ['class', '.light'], // الوضع النهاري يفعّل بكلاس .light
             theme: {
                 extend: {
                     colors: {
-                        'primary-bg': '#fbfaf6',    // بيج فاتح (خلفية الشريط)
-                        'primary-text': '#5a3a1c',  // بني داكن (لون العنوان)
+                        'primary-bg': '#fbfaf6',    // بيج فاتح (خلفية الوضع النهاري)
+                        'primary-text': '#5a3a1c',  // بني داكن (لون العنوان النهاري)
+                        'header-bg': '#5a3a1c',   // بني (لون الشريط العلوي)
                         'accent': '#c7a17a',      // بني ذهبي (للتحديد)
-                        'dark-bg': '#1a1a1a',     // خلفية الوضع الداكن
-                        'dark-card': '#2a2a2a',    // لون الكروت في الوضع الداكن
-                        'dark-text': '#e0e0e0',   // لون النص في الوضع الداكن
-                        'success': '#00FF99',     // أخضر فاتح (للنجاح)
-                        'warning': '#FFA74D',     // برتقالي (للتنبيه)
+                        'dark-bg': '#111111',     // أسود داكن (افتراضي)
+                        'dark-card': '#2a2a2a',    // لون الكروت (افتراضي)
+                        'dark-text': '#e0e0e0',   // لون النص (افتراضي)
+                        'success': '#00FF99',     // أخضر فاتح
+                        'warning': '#FFA74D',     // برتقالي
                         'sepia-bg': '#f5deb3',    // خلفية الدفتر
                         'sepia-lines': '#e0cdaf', // لون سطور الدفتر
                         'sepia-text': '#5D4037',  // لون نص الدفتر
@@ -41,73 +45,72 @@
         }
     </script>
 
-    <!-- 4. Custom CSS (تنسيقات إضافية) -->
+    <!-- 5. Custom CSS (الوضع الداكن هو الافتراضي + تأثير تقليب الصفحات) -->
     <style>
         /* تطبيق الخطوط الافتراضية */
         body {
             font-family: 'Cairo', sans-serif;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden; /* منع السكرول الأفقي بسبب التقليب */
         }
         h1, h2, h3, h4, h5, h6, .font-amiri {
             font-family: 'Amiri', serif;
         }
-        /* تصميم التاب النشط */
+        /* تصميم التاب النشط (داكن افتراضي) */
         .tab-btn.active {
-            border-bottom-color: var(--tw-color-primary-text) !important;
-            color: var(--tw-color-primary-text) !important;
-            font-weight: 700;
-        }
-        .dark .tab-btn.active {
             border-bottom-color: var(--tw-color-accent) !important;
             color: var(--tw-color-accent) !important;
+            font-weight: 700;
+        }
+        html.light .tab-btn.active {
+            border-bottom-color: var(--tw-color-primary-text) !important;
+            color: var(--tw-color-primary-text) !important;
         }
         /* إخفاء سكرولبار التابات */
-        .tabs-container { scrollbar-width: none; /* Firefox */ }
-        .tabs-container::-webkit-scrollbar { display: none; /* Chrome, Safari */ }
+        .tabs-container { scrollbar-width: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
 
-        /* --- تصميم الدفتر (Sepia) --- */
-        /* يتم تطبيق هذا الكلاس على حاوية التحضير */
-        html:not(.dark) .notebook-page {
+        /* --- تصميم الدفتر (Sepia - للوضع النهاري فقط) --- */
+        html.light .notebook-page {
             background-color: var(--tw-color-sepia-bg);
-            /* سطور الدفتر */
             background-image: repeating-linear-gradient(to bottom, transparent, transparent 24px, var(--tw-color-sepia-lines) 25px);
             background-size: 100% 25px;
             border: 1px solid #d4b-a-8a;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             color: var(--tw-color-sepia-text);
         }
-        html:not(.dark) .notebook-page .form-input,
-        html:not(.dark) .notebook-page textarea {
+        html.light .notebook-page .form-input,
+        html.light .notebook-page textarea {
             background-color: rgba(255, 255, 255, 0.6);
             border-color: var(--tw-color-sepia-lines);
             color: var(--tw-color-sepia-text);
         }
-        html:not(.dark) .notebook-page .form-input:focus,
-        html:not(.dark) .notebook-page textarea:focus {
+        html.light .notebook-page .form-input:focus,
+        html.light .notebook-page textarea:focus {
             background-color: rgba(255, 255, 255, 0.9);
         }
-        html:not(.dark) .notebook-page h2,
-        html:not(.dark) .notebook-page h3 {
+        html.light .notebook-page h2,
+        html.light .notebook-page h3 {
             color: var(--tw-color-sepia-text);
             border-bottom-color: var(--tw-color-accent);
         }
-        html:not(.dark) .notebook-page table thead {
+        html.light .notebook-page table thead {
             background-color: rgba(255, 255, 255, 0.3);
         }
-        html:not(.dark) .notebook-page table,
-        html:not(.dark) .notebook-page table th,
-        html:not(.dark) .notebook-page table td {
+        html.light .notebook-page table,
+        html.light .notebook-page table th,
+        html.light .notebook-page table td {
             border-color: var(--tw-color-sepia-lines);
         }
         /* --- نهاية تصميم الدفتر --- */
 
 
-        /* --- تأثير قلب الصفحة (Page Flip) --- */
-        .book-container {
+        /* --- تأثير قلب الصفحة (Page Flip) للأقسام الرئيسية --- */
+        #main-book-container {
             position: relative;
             width: 100%;
             min-height: 700px;
-            perspective: 1500px;
+            perspective: 2000px;
         }
         .book-page {
             position: absolute;
@@ -116,10 +119,10 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            transition: transform 0.8s ease-in-out;
-            transform-origin: left center; /* يتم القلب من اليسار */
+            transition: transform 0.9s ease-in-out;
+            transform-origin: right center; /* (تعديل) ليناسب RTL */
             backface-visibility: hidden;
-            display: none; /* مخفي افتراضيًا */
+            display: none; /* إخفاء الصفحات افتراضيًا */
         }
         .book-page.active {
             display: block;
@@ -127,11 +130,36 @@
             z-index: 20;
         }
         .book-page.flipped {
-            transform: rotateY(-180deg);
+            transform: rotateY(180deg); /* (تعديل) قلب للخلف */
             z-index: 10;
         }
+        /* --- نهاية تأثير قلب الصفحة الرئيسي --- */
+
+        /* --- تأثير قلب الصفحة الداخلي (للمراجعة) --- */
+        .inner-book-container {
+            position: relative;
+            width: 100%;
+            min-height: 700px;
+            perspective: 1500px;
+        }
+        .inner-book-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+            transform-origin: left center; /* داخلي (LTR) */
+            backface-visibility: hidden;
+            display: none;
+        }
+        .inner-book-page.active { display: block; transform: rotateY(0deg); z-index: 20; }
+        .inner-book-page.flipped { transform: rotateY(-180deg); z-index: 10; }
+        /* --- نهاية تأثير التقليب الداخلي --- */
+
+
         .page-content-wrapper {
-            /* هذا يضمن أن المحتوى يظهر على الوجهين */
             position: absolute;
             width: 100%;
             height: 100%;
@@ -140,10 +168,6 @@
         .page-content-wrapper.front {
             transform: rotateY(0deg);
         }
-        /* .page-content-wrapper.back {
-             /* (يمكن إضافة محتوى خلفي للصفحة هنا إذا أردنا) */
-            /* transform: rotateY(180deg); 
-        } */
         
         /* رسالة منبثقة بسيطة (Toast) */
         #toast-notification {
@@ -159,258 +183,385 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+        
+        /* تنسيقات الاستجابة للموبايل */
+        @media (max-width: 768px) {
+            .tab-btn {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+            .header-title {
+                font-size: 1.5rem;
+            }
+            #header-dates {
+                font-size: 0.65rem;
+            }
+            .main-header .container {
+                 padding-top: 0.5rem;
+                 padding-bottom: 0.5rem;
+            }
+            nav.tabs-container {
+                /* (تعديل) تم تغيير الـ top ليناسب التصميم الجديد */
+                top: 84px; 
+            }
+            /* (تعديل) إخفاء أزرار التنقل الرئيسية في الموبايل (لأنها في الهيدر) */
+            #main-nav-controls {
+                display: none; /* إخفاء الأزرار العادية */
+            }
+            #main-nav-controls-mobile {
+                display: flex; /* إظهار أزرار الموبايل */
+                gap: 0.5rem;
+            }
+            #main-nav-controls-mobile button {
+                padding: 0.25rem 0.5rem; /* تصغير الأزرار */
+                font-size: 0.875rem;
+            }
+            #main-page-counter {
+                font-size: 0.875rem;
+                margin: 0 0.25rem;
+            }
 
+            main.container {
+                padding: 0.75rem;
+            }
+            /* تعديل الجداول للعرض العمودي على الموبايل */
+            .manhaj-table table, 
+            .manhaj-table thead, 
+            .manhaj-table tbody, 
+            .manhaj-table th, 
+            .manhaj-table td, 
+            .manhaj-table tr {
+                display: block;
+            }
+            .manhaj-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            .manhaj-table tr {
+                border: 1px solid var(--tw-color-border-gray-700);
+                margin-bottom: 0.5rem;
+            }
+            html.light .manhaj-table tr {
+                border-color: var(--tw-color-border-gray-200);
+            }
+            .manhaj-table td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50% !important;
+                padding-right: 0.5rem !important;
+                text-align: left;
+            }
+            html.light .manhaj-table td {
+                 border-bottom-color: var(--tw-color-sepia-lines);
+            }
+            .manhaj-table td:before {
+                position: absolute;
+                top: 6px;
+                right: 6px; /* RTL */
+                left: auto;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                text-align: right; /* RTL */
+            }
+            /* عناوين الجدول للموبايل */
+            .manhaj-table td:nth-of-type(1):before { content: "الزمن"; }
+            .manhaj-table td:nth-of-type(2):before { content: "المنهج"; }
+            .manhaj-table td:nth-of-type(3):before { content: "الموضوع"; }
+        }
+        @media (max-width: 400px) {
+             .tab-btn {
+                font-size: 0.75rem;
+             }
+             #intro-page h1 { font-size: 2.5rem; }
+             #intro-page p { font-size: 1.125rem; }
+             #intro-page button { font-size: 1rem; padding: 0.75rem 2rem; }
+        }
     </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-dark-bg text-gray-800 dark:text-dark-text transition-colors duration-300">
+<!-- الوضع الداكن هو الافتراضي، الوضع النهاري يضاف ككلاس .light -->
+<body class="bg-dark-bg text-dark-text transition-colors duration-300">
 
-    <!-- ========== 1. الشريط العلوي ========== -->
-    <header class="sticky top-0 z-50 w-full bg-primary-bg dark:bg-dark-card shadow-md">
+    <!-- ========== 0. صفحة الانترو ========== -->
+    <div id="intro-page" class="fixed inset-0 z-[100] bg-dark-bg flex flex-col justify-center items-center text-center p-8 transition-opacity duration-1000">
+        <h1 class="font-amiri text-5xl md:text-6xl font-bold text-white mb-6">📚 مكتبتي ومنهجي</h1>
+        <p class="text-xl md:text-2xl text-gray-300 mb-12">دفترك الشخصي لتنظيم علمك وحياتك</p>
+        <button id="start-journey-btn" class="bg-accent text-white px-10 py-4 rounded-lg font-semibold text-xl hover:opacity-90 transform hover:scale-105 transition-transform">
+            ابدأ رحلتي
+        </button>
+    </div>
+
+    <!-- ========== 1. الشريط العلوي (بني بالكامل) ========== -->
+    <header class="main-header sticky top-0 z-50 w-full bg-header-bg shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <!-- زر الوضع الداكن (للموبايل) -->
-            <button id="darkModeToggleMobile" class="lg:hidden text-primary-text dark:text-accent text-xl">
-                <span class="sun-icon">☀️</span>
-                <span class="moon-icon hidden">🌙</span>
-            </button>
             
-            <!-- العنوان والتاريخ -->
-            <div class="flex-1 flex flex-col items-center justify-center text-center">
-                <h1 class="text-3xl font-amiri font-bold text-primary-text dark:text-gray-100">
+            <!-- (تعديل) العنوان والتاريخ على اليمين -->
+            <div class="flex-shrink-0 flex flex-col items-start justify-center">
+                <h1 class="header-title text-3xl font-amiri font-bold text-white">
                     📚 مكتبتي ومنهجي
                 </h1>
-                <div id="header-dates" class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                <div id="header-dates" class="text-xs text-gray-300 light:text-gray-400 mt-1">
                     <!-- التاريخ يضاف هنا عبر JS -->
                 </div>
             </div>
-            
-            <!-- زر الوضع الداكن (للشاشات الكبيرة) -->
-            <button id="darkModeToggle" class="hidden lg:block text-primary-text dark:text-accent text-xl">
-                <span class="sun-icon">☀️</span>
-                <span class="moon-icon hidden">🌙</span>
-            </button>
+
+            <!-- (تعديل) الأزرار والتنقل على اليسار -->
+            <div class="flex-1 flex justify-end items-center gap-2 md:gap-4">
+                
+                <!-- (جديد) أزرار التنقل الرئيسية (للدسكتوب) -->
+                <div id="main-nav-controls" class="hidden md:flex items-center gap-2">
+                    <button id="main-prev-btn" class="bg-white text-header-bg px-4 py-1 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 text-sm">
+                        &rarr; السابق
+                    </button>
+                    <span id="main-page-counter" class="text-center text-gray-300 text-sm w-20"></span>
+                    <button id="main-next-btn" class="bg-white text-header-bg px-4 py-1 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 text-sm">
+                        التالي &larr;
+                    </button>
+                </div>
+                
+                <!-- (جديد) أزرار التنقل الرئيسية (للموبايل) -->
+                <div id="main-nav-controls-mobile" class="md:hidden flex items-center gap-1">
+                    <button id="main-prev-btn-mobile" class="bg-white text-header-bg px-2 py-1 rounded font-bold hover:opacity-90 disabled:opacity-50">
+                        &rarr;
+                    </button>
+                    <span id="main-page-counter-mobile" class="text-center text-gray-300 text-xs w-12"></span>
+                    <button id="main-next-btn-mobile" class="bg-white text-header-bg px-2 py-1 rounded font-bold hover:opacity-90 disabled:opacity-50">
+                        &larr;
+                    </button>
+                </div>
+
+                <!-- زر الوضع الليلي -->
+                <button id="darkModeToggle" class="text-white light:text-accent text-xl">
+                    <span class="sun-icon">☀️</span> <!-- يظهر في الوضع الداكن -->
+                    <span class="moon-icon hidden">🌙</span> <!-- يظهر في الوضع النهاري -->
+                </button>
+            </div>
+
         </div>
     </header>
 
     <!-- ========== 2. شريط التبويبات (Tabs) ========== -->
-    <nav class="tabs-container sticky top-[84px] lg:top-[92px] z-40 bg-white dark:bg-dark-card shadow-sm overflow-x-auto whitespace-nowrap">
-        <div class="container mx-auto px-4 flex justify-center space-x-6 rtl:space-x-reverse">
-            <button class="tab-btn active text-lg py-3 px-2 border-b-4 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-text" data-tab="tajweed">
+    <nav class="tabs-container sticky top-[84px] md:top-[92px] z-40 bg-dark-card light:bg-white shadow-sm overflow-x-auto whitespace-nowrap">
+        <div class="container mx-auto px-4 flex justify-center space-x-2 md:space-x-6 rtl:space-x-reverse">
+            <!-- التبويبات تتحكم في تقليب الصفحات -->
+            <button class="tab-btn active py-3 px-1 text-sm md:text-lg md:px-2 border-b-4 border-transparent text-gray-400 light:text-gray-500 hover:text-accent" data-page-index="0">
                 🎙️ التحضير
             </button>
-            <button class="tab-btn text-lg py-3 px-2 border-b-4 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-text" data-tab="supervisor">
-                 REVIEW (مراجعة المشرف)
+            <button class="tab-btn py-3 px-1 text-sm md:text-lg md:px-2 border-b-4 border-transparent text-gray-400 light:text-gray-500 hover:text-accent" data-page-index="1">
+                 REVIEW
             </button>
-            <button class="tab-btn text-lg py-3 px-2 border-b-4 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-text" data-tab="university">
+            <button class="tab-btn py-3 px-1 text-sm md:text-lg md:px-2 border-b-4 border-transparent text-gray-400 light:text-gray-500 hover:text-accent" data-page-index="2">
                 🎓 الجامعة
             </button>
-            <button class="tab-btn text-lg py-3 px-2 border-b-4 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-text" data-tab="tarawih">
+            <button class="tab-btn py-3 px-1 text-sm md:text-lg md:px-2 border-b-4 border-transparent text-gray-400 light:text-gray-500 hover:text-accent" data-page-index="3">
                 🕌 التراويح
             </button>
-            <button class="tab-btn text-lg py-3 px-2 border-b-4 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary-text" data-tab="planning">
+            <button class="tab-btn py-3 px-1 text-sm md:text-lg md:px-2 border-b-4 border-transparent text-gray-400 light:text-gray-500 hover:text-accent" data-page-index="4">
                 📅 التخطيط
             </button>
         </div>
     </nav>
 
-    <!-- ========== 3. منطقة المحتوى الرئيسية ========== -->
+    <!-- ========== 3. منطقة المحتوى الرئيسية (حاوية الدفتر) ========== -->
     <main class="container mx-auto p-4 md:p-6">
 
-        <!-- ===== الصفحة 1: قسم تحضير التجويد ===== -->
-        <div id="tajweed" class="page-content space-y-6">
-            <!-- تمت إضافة كلاس notebook-page لتطبيق تصميم الدفتر -->
-            <div id="tajweed-form-container" class="notebook-page p-6 bg-white dark:bg-dark-card rounded-lg shadow-lg">
-                <div class="flex flex-wrap justify-between items-center mb-6">
-                    <h2 class="font-amiri text-2xl font-bold text-primary-text dark:text-accent border-b-2 border-accent pb-2">
-                        تحضير حلقة التجويد
-                    </h2>
-                    <div class="flex gap-2 mt-2 md:mt-0">
-                        <button id="save-prep-btn" class="bg-success text-black px-4 py-2 rounded-lg font-semibold hover:opacity-90">
-                            💾 حفظ التحضير
-                        </button>
-                        <button id="new-prep-btn" class="bg-warning text-black px-4 py-2 rounded-lg font-semibold hover:opacity-90">
-                            + تحضير جديد
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- بيانات الحلقة (تمت إزالة data-save) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="form-group">
-                        <label class="text-sm font-semibold">رقم الحلقة</label>
-                        <input type="number" id="t-halaqaNum" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="text-sm font-semibold">اسم المجموعة</label>
-                        <input type="text" id="t-groupName" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="text-sm font-semibold">الفرقة</label>
-                        <input type="text" id="t-team" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="text-sm font-semibold">المستوى</label>
-                        <input type="text" id="t-level" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="text-sm font-semibold">التاريخ</label>
-                        <input type="date" id="t-date" class="form-input">
-                    </div>
-                    <div class="form-group col-span-1 md:col-span-2 lg:col-span-2">
-                        <label class="text-sm font-semibold">الفترة</label>
-                        <div class="flex gap-2">
-                            <input type="time" id="t-timeFrom" class="form-input" title="من">
-                            <input type="time" id="t-timeTo" class="form-input" title="إلى">
+        <!-- حاوية الدفتر الرئيسية -->
+        <div id="main-book-container">
+
+            <!-- ===== الصفحة 1: قسم تحضير التجويد ===== -->
+            <div id="tajweed" class="book-page page-content space-y-6" data-page-index="0">
+                <div class="page-content-wrapper front">
+                    <div id="tajweed-form-container" class="notebook-page p-6 bg-dark-card light:bg-white rounded-lg shadow-lg">
+                        <div class="flex flex-wrap justify-between items-center mb-6">
+                            <h2 class="font-amiri text-2xl font-bold text-accent light:text-primary-text border-b-2 border-accent pb-2">
+                                تحضير حلقة التجويد
+                            </h2>
+                            <div class="flex gap-2 mt-2 md:mt-0">
+                                <button id="save-prep-btn" class="bg-success text-black px-4 py-2 rounded-lg font-semibold hover:opacity-90">
+                                    💾 حفظ التحضير
+                                </button>
+                                <button id="new-prep-btn" class="bg-warning text-black px-4 py-2 rounded-lg font-semibold hover:opacity-90">
+                                    + تحضير جديد
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                            <div class="form-group"><label class="text-sm font-semibold">رقم الحلقة</label><input type="number" id="t-halaqaNum" class="form-input"></div>
+                            <div class="form-group"><label class="text-sm font-semibold">اسم المجموعة</label><input type="text" id="t-groupName" class="form-input"></div>
+                            <div class="form-group"><label class="text-sm font-semibold">الفرقة</label><input type="text" id="t-team" class="form-input"></div>
+                            <div class="form-group"><label class="text-sm font-semibold">المستوى</label><input type="text" id="t-level" class="form-input"></div>
+                            <div class="form-group"><label class="text-sm font-semibold">التاريخ</label><input type="date" id="t-date" class="form-input"></div>
+                            <div class="form-group col-span-1 md:col-span-2 lg:col-span-2"><label class="text-sm font-semibold">الفترة</label><div class="flex gap-2"><input type="time" id="t-timeFrom" class="form-input" title="من"><input type="time" id="t-timeTo" class="form-input" title="إلى"></div></div>
+                        </div>
+
+                        <!-- منهج حلقة اليوم -->
+                        <h3 class="font-amiri text-xl font-bold text-gray-100 light:text-primary-text mb-4">منهج حلقة اليوم</h3>
+                        <div class="manhaj-table overflow-x-auto rounded-lg border border-gray-700 light:border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-700 light:divide-gray-200">
+                                <thead class="bg-gray-800 light:bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-right text-xs font-bold uppercase">الزمن</th>
+                                        <th class="px-4 py-3 text-right text-xs font-bold uppercase">المنهج</th>
+                                        <th class="px-4 py-3 text-right text-xs font-bold uppercase">الموضوع والتفاصيل</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card light:bg-white divide-y divide-gray-700 light:divide-gray-200">
+                                     <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">5 دقائق</td>
+                                        <td class="px-4 py-3 font-semibold">كتابة السبورة والغياب</td>
+                                        <td class="px-4 py-3"><input type="text" id="t-p1" class="form-input" placeholder="ملاحظات..."></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">15 دقيقة</td>
+                                        <td class="px-4 py-3 font-semibold">الأحكام</td>
+                                        <td class="px-4 py-3"><textarea id="t-p2" class="form-input" rows="2" placeholder="عناصر الدرس..."></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">50 دقيقة</td>
+                                        <td class="px-4 py-3 font-semibold">التسميع والمراجعة</td>
+                                        <td class="px-4 py-3"><textarea id="t-p3" class="form-input" rows="2" placeholder="تفاصيل المراجعة..."></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap">50 دقيقة</td>
+                                        <td class="px-4 py-3 font-semibold">الحفظ الجديد</td>
+                                        <td class="px-4 py-3 space-y-2">
+                                            <div class="flex flex-col md:flex-row gap-2">
+                                                <input type="number" id="surah-number-input" class="form-input md:w-1/2" placeholder="رقم السورة (مثال: 1)">
+                                                <input type="number" id="t-hifzPage" class="form-input md:w-1/2" placeholder="رقم الصفحة">
+                                            </div>
+                                            <div class="flex flex-col md:flex-row gap-2">
+                                                <input type="number" id="t-hifzAyahFrom" class="form-input md:w-1/2" placeholder="من آية">
+                                                <input type="number" id="t-hifzAyahTo" class="form-input md:w-1/2" placeholder="إلى آية">
+                                            </div>
+                                            <div class="relative">
+                                                <button id="fetch-meanings-btn" class="absolute top-2 left-2 text-xs bg-accent text-white px-2 py-1 rounded hover:opacity-90 z-10">
+                                                    جلب المعاني
+                                                </button>
+                                                <textarea id="word-meanings-output" class="form-input" rows="4" placeholder="المعاني التلقائية (التفسير الميسر)..."></textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- منهج الحلقة القادمة -->
+                        <h3 class="font-amiri text-xl font-bold text-gray-100 light:text-primary-text mt-6 mb-4">منهج الحلقة القادمة</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="t-nextSurah" class="form-input" placeholder="السورة">
+                            <input type="text" id="t-nextAyahs" class="form-input" placeholder="الآيات من .. إلى ..">
+                            <input type="text" id="t-nextReview" class="form-input" placeholder="المراجعة">
+                            <input type="text" id="t-nextAhkam" class="form-input" placeholder="الأحكام">
+                        </div>
+
+                        <!-- توصيات المشرف -->
+                        <h3 class="font-amiri text-xl font-bold text-gray-100 light:text-primary-text mt-6 mb-4">توصيات المشرف</h3>
+                        <textarea id="t-supervisorNotes" class="form-input bg-gray-800 light:bg-gray-100" rows="3" placeholder="تظهر ملاحظات المشرف هنا..." readonly></textarea>
+                        <div class="flex flex-col md:flex-row justify-between items-center mt-4">
+                            <div class="border-t-2 border-dashed border-gray-600 w-1/3 pt-1 text-sm text-gray-500 text-center md:text-right">توقيع المشرف</div>
+                            <button id="share-whatsapp-btn" class="mt-4 md:mt-0 bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 w-full md:w-auto">
+                                مشاركة التحضير (صورة)
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- منهج حلقة اليوم -->
-                <h3 class="font-amiri text-xl font-bold text-primary-text dark:text-gray-100 mb-4">منهج حلقة اليوم</h3>
-                <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-800">
-                            <tr>
-                                <th class="px-4 py-3 text-right text-xs font-bold uppercase">الزمن</th>
-                                <th class="px-4 py-3 text-right text-xs font-bold uppercase">المنهج</th>
-                                <th class="px-4 py-3 text-right text-xs font-bold uppercase">الموضوع والتفاصيل</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700">
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap">5 دقائق</td>
-                                <td class="px-4 py-3 font-semibold">كتابة السبورة والغياب</td>
-                                <td class="px-4 py-3"><input type="text" id="t-p1" class="form-input" placeholder="ملاحظات..."></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap">15 دقيقة</td>
-                                <td class="px-4 py-3 font-semibold">الأحكام</td>
-                                <td class="px-4 py-3"><textarea id="t-p2" class="form-input" rows="2" placeholder="عناصر الدرس..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap">50 دقيقة</td>
-                                <td class="px-4 py-3 font-semibold">التسميع والمراجعة</td>
-                                <td class="px-4 py-3"><textarea id="t-p3" class="form-input" rows="2" placeholder="تفاصيل المراجعة..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap">50 دقيقة</td>
-                                <td class="px-4 py-3 font-semibold">الحفظ الجديد</td>
-                                <td class="px-4 py-3 space-y-2">
-                                    <div class="flex gap-2">
-                                        <input type="text" id="surah-name-input" class="form-input w-1/2" placeholder="اسم السورة">
-                                        <input type="number" id="t-hifzPage" class="form-input w-1/2" placeholder="رقم الصفحة">
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <input type="number" id="t-hifzAyahFrom" class="form-input w-1/2" placeholder="من آية">
-                                        <input type="number" id="t-hifzAyahTo" class="form-input w-1/2" placeholder="إلى آية">
-                                    </div>
-                                    <textarea id="word-meanings-output" class="form-input" rows="3" placeholder="بعض معاني الكلمات (تُجلب تلقائيًا)..."></textarea>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- منهج الحلقة القادمة -->
-                <h3 class="font-amiri text-xl font-bold text-primary-text dark:text-gray-100 mt-6 mb-4">منهج الحلقة القادمة</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="t-nextSurah" class="form-input" placeholder="السورة">
-                    <input type="text" id="t-nextAyahs" class="form-input" placeholder="الآيات من .. إلى ..">
-                    <input type="text" id="t-nextReview" class="form-input" placeholder="المراجعة">
-                    <input type="text" id="t-nextAhkam" class="form-input" placeholder="الأحكام">
-                </div>
-
-                <!-- توصيات المشرف -->
-                <h3 class="font-amiri text-xl font-bold text-primary-text dark:text-gray-100 mt-6 mb-4">توصيات المشرف</h3>
-                <!-- هذا الحقل سيتم ملؤه تلقائيًا من وضع المراجعة -->
-                <textarea id="t-supervisorNotes" class="form-input bg-gray-100 dark:bg-gray-800" rows="3" placeholder="تظهر ملاحظات المشرف هنا..." readonly></textarea>
-                <div class="flex justify-between items-center mt-4">
-                    <div class="border-t-2 border-dashed border-gray-400 w-1/3 pt-1 text-sm text-gray-500">توقيع المشرف</div>
-                    <button id="share-whatsapp-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600">
-                        مشاركة عبر واتساب
-                    </button>
+            <!-- ===== الصفحة 2: مراجعة المشرف ===== -->
+            <div id="supervisor" class="book-page page-content space-y-6" data-page-index="1">
+                 <div class="page-content-wrapper front">
+                    <div class="p-6 bg-dark-card light:bg-white rounded-lg shadow-lg h-full">
+                        <h2 class="font-amiri text-2xl font-bold text-accent light:text-primary-text mb-6">
+                            مراجعة التحضيرات (وضع المشرف)
+                        </h2>
+                        <!-- (تعديل) استخدام كلاس التقليب الداخلي -->
+                        <div id="supervisor-book-container" class="inner-book-container">
+                            <!-- الصفحات تضاف هنا عبر JS -->
+                        </div>
+                        <div class="flex justify-center gap-4 mt-6">
+                            <button id="prev-page-btn-inner" class="bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50" disabled>
+                                &rarr; السابق
+                            </button>
+                            <button id="next-page-btn-inner" class="bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 disabled:opacity-50" disabled>
+                                التالي &larr;
+                            </button>
+                        </div>
+                        <div id="page-counter-inner" class="text-center text-gray-400 light:text-gray-500"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ===== الصفحة الجديدة: مراجعة المشرف ===== -->
-        <div id="supervisor" class="page-content hidden space-y-6">
-            <h2 class="font-amiri text-2xl font-bold text-primary-text dark:text-accent mb-6">
-                مراجعة التحضيرات (وضع المشرف)
-            </h2>
-            
-            <!-- حاوية الدفتر لقلب الصفحات -->
-            <div id="supervisor-book-container" class="book-container">
-                <!-- الصفحات تضاف هنا عبر JS -->
+
+            <!-- ===== الصفحة 3: قسم الطالب الجامعي ===== -->
+            <div id="university" class="book-page page-content space-y-6" data-page-index="2">
+                 <div class="page-content-wrapper front">
+                    <div class="p-6 bg-dark-card light:bg-white rounded-lg shadow-lg h-full">
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <h2 class="font-amiri text-2xl font-bold text-accent light:text-primary-text mb-4 md:mb-0">
+                                موادي الجامعية
+                            </h2>
+                            <button id="add-subject-btn" class="bg-accent text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 w-full md:w-auto">
+                                + إضافة مادة
+                            </button>
+                        </div>
+                        <div id="subjects-container" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- سيتم ملء المواد هنا -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== الصفحة 4: قسم صلاة التراويح ===== -->
+            <div id="tarawih" class="book-page page-content" data-page-index="3">
+                 <div class="page-content-wrapper front">
+                    <div class="p-6 bg-dark-card light:bg-white rounded-lg shadow-lg h-full">
+                        <h2 class="font-amiri text-2xl font-bold text-accent light:text-primary-text mb-6">
+                            جدول صلاة التراويح
+                        </h2>
+                        <div id="tarawih-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- سيتم ملء الأيام هنا -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== الصفحة 5: قسم التخطيط اليومي ===== -->
+            <div id="planning" class="book-page page-content" data-page-index="4">
+                 <div class="page-content-wrapper front">
+                    <div class="p-6 bg-dark-card light:bg-white rounded-lg shadow-lg h-full">
+                        <h2 class="font-amiri text-2xl font-bold text-accent light:text-primary-text text-center mb-4">
+                            الأسبوع الأول (التاريخ...)
+                        </h2>
+                        <div id="planning-week" class="space-y-6">
+                            <!-- سيتم ملء الأيام هنا -->
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- أزرار التنقل -->
-            <div class="flex justify-center gap-4 mt-6">
-                <button id="prev-page-btn" class="bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90">
-                    &rarr; السابق
-                </button>
-                <button id="next-page-btn" class="bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90">
-                    التالي &larr;
-                </button>
-            </div>
-            <div id="page-counter" class="text-center text-gray-500 dark:text-gray-400"></div>
-        </div>
+        </div> <!-- نهاية #main-book-container -->
 
-
-        <!-- ===== الصفحة 2: قسم الطالب الجامعي ===== -->
-        <div id="university" class="page-content hidden space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="font-amiri text-2xl font-bold text-primary-text dark:text-accent">
-                    موادي الجامعية
-                </h2>
-                <button id="add-subject-btn" class="bg-accent text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90">
-                    + إضافة مادة
-                </button>
-            </div>
-            <!-- (محتوى قسم الجامعة لم يتغير) -->
-            <div id="subjects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </div>
-
-        <!-- ===== الصفحة 3: قسم صلاة التراويح ===== -->
-        <div id="tarawih" class="page-content hidden">
-            <div class="p-6 bg-white dark:bg-dark-card rounded-lg shadow-lg">
-                <h2 class="font-amiri text-2xl font-bold text-primary-text dark:text-accent mb-6">
-                    جدول صلاة التراويح
-                </h2>
-                <!-- (محتوى قسم التراويح لم يتغير) -->
-                <div id="tarawih-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== الصفحة 4: قسم التخطيط اليومي ===== -->
-        <div id="planning" class="page-content hidden">
-            <div class="p-6 bg-white dark:bg-dark-card rounded-lg shadow-lg">
-                <h2 class="font-amiri text-2xl font-bold text-primary-text dark:text-accent text-center mb-4">
-                    الأسبوع الأول من شهر ربيع الآخر 1447هـ – نوفمبر 2025م
-                </h2>
-                <!-- (محتوى قسم التخطيط لم يتغير) -->
-                <div id="planning-week" class="space-y-6">
-                </div>
-            </div>
-        </div>
+        <!-- (تعديل) تم نقل أزرار التنقل الرئيسية إلى الشريط العلوي -->
 
     </main>
 
     <!-- ========== 4. العارض المنبثق (Modal) للجامعة ========== -->
-    <!-- (Modal لم يتغير) -->
     <div id="viewer-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-70 flex justify-center items-center p-4 hidden transition-opacity duration-300">
-        <div class="bg-white dark:bg-dark-card w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 id="modal-title" class="font-amiri text-xl font-bold text-primary-text dark:text-accent"></h3>
+        <div class="bg-dark-card light:bg-white w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700 light:border-gray-200">
+                <h3 id="modal-title" class="font-amiri text-xl font-bold text-accent light:text-primary-text"></h3>
                 <button id="close-modal-btn" class="text-3xl text-gray-400 hover:text-red-500">&times;</button>
             </div>
             <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
-                <div id="viewer-content" class="flex-1 bg-gray-100 dark:bg-dark-bg flex justify-center items-center">
+                <div id="viewer-content" class="flex-1 bg-dark-bg light:bg-gray-100 flex justify-center items-center">
                     <p class="text-gray-400">سيتم عرض المحتوى هنا...</p>
                 </div>
-                <div class="w-full md:w-1/3 p-4 border-t md:border-t-0 md:border-r border-gray-200 dark:border-gray-700 flex flex-col">
+                <div class="w-full md:w-1/3 p-4 border-t md:border-t-0 md:border-r border-gray-700 light:border-gray-200 flex flex-col">
                     <h4 class="font-amiri font-bold text-lg mb-2">أدوات المذاكرة</h4>
                     <div class="space-x-2 rtl:space-x-reverse mb-4">
                         <button class="tool-btn px-3 py-1 rounded bg-yellow-300 text-black text-sm">🖋️ قلم</button>
@@ -429,101 +580,60 @@
     </div>
 
 
-    <!-- ========== 6. JavaScript (المنطق البرمجي) ========== -->
+    <!-- ========== 6. JavaScript (المنطق البرجي) ========== -->
     <script>
-        // دالة لتطبيق التنسيقات على المدخلات
+        // --- 1. الإعدادات العامة ---
+        
         function applyInputStyles() {
             document.querySelectorAll('.form-input').forEach(input => {
+                if(input.classList.contains('form-input-styled')) return;
                 input.classList.add(
-                    'w-full', 'mt-1', 'p-2', 'border', 'border-gray-300', 'rounded-md',
-                    'dark:bg-gray-700', 'dark:border-gray-600', 'dark:text-white',
-                    'focus:ring-2', 'focus:ring-accent', 'focus:outline-none'
+                    'form-input-styled', 'w-full', 'mt-1', 'p-2', 'border', 'rounded-md',
+                    'bg-gray-700', 'border-gray-600', 'text-white',
+                    'light:bg-gray-100', 'light:border-gray-300', 'light:text-black',
+                    'focus:ring-2', 'focus:ring-accent', 'focus:outline-none', 'transition-colors'
                 );
             });
         }
         
-        // قاعدة بيانات وهمية لمعاني الكلمات (لأغراض العرض)
-        const MOCK_MEANINGS = {
-            "الفاتحة": "اهدنا الصراط المستقيم: أرشدنا إلى الطريق القويم.\nالمغضوب عليهم: اليهود.\nالضالين: النصارى.",
-            "الناس": "الوسواس: الشيطان.\nالخناس: الذي يتوارى ويختفي.",
-            "الإخلاص": "الصمد: السيد الذي يُقصد في الحوائج.\nكفوًا: نظيرًا ومماثلاً.",
-            "البقرة": "الم: من الحروف المقطعة، والله أعلم بمراده.",
-        };
-        
-        // مفتاح حفظ البيانات
-        const APP_DATA_KEY = 'myManhajData_v1';
-        
-        // ** (تم التعديل) **
-        // هيكل البيانات الافتراضي
+        const APP_DATA_KEY = 'myManhajData_v2';
         const getDefaultData = () => ({
-            tajweed: {
-                preparations: [], // مصفوفة لحفظ كل التحضيرات
-                currentPrepId: null //معرّف التحضير المفتوح حالياً
-            },
-            university: {}, // (يتبع النظام القديم data-save)
-            tarawih: {},    // (يتبع النظام القديم data-save)
-            planning: {}    // (يتبع النظام القديم data-save)
+            tajweed: { preparations: [], currentPrepId: null },
+            university: { subjects: [] },
+            tarawih: {},
+            planning: {}
         });
-
-        // متغير لحفظ بيانات التطبيق
         let appData = getDefaultData();
 
-        // (دالة الحفظ القديمة للأقسام الأخرى)
-        function saveOtherData() {
-            const data = appData; // ابدأ بالبيانات الموجودة
-            document.querySelectorAll('[data-save]').forEach(el => {
-                const key = el.getAttribute('data-save');
-                // (هذا الكود مبسط، الكود الأصلي كان يفصل المستويات)
-                // لنقم بتحديثه ليحفظ الأقسام الأخرى فقط
-                if (!key.startsWith('tajweed.')) {
-                    // هذا يحتاج بنية أكثر تعقيداً، سنبقي الكود الأصلي
-                    // ... الكود الأصلي لحفظ الأقسام الأخرى ...
-                }
-            });
-            localStorage.setItem(APP_DATA_KEY, JSON.stringify(data));
-        }
-
-        // (دالة التحميل القديمة للأقسام الأخرى)
-        function loadOtherData() {
-            const data = appData;
-            document.querySelectorAll('[data-save]').forEach(el => {
-                const key = el.getAttribute('data-save');
-                if (data[key] && !key.startsWith('tajweed.')) {
-                    el.value = data[key];
-                }
-            });
-        }
-        
-        // --- (جديد) دوال خاصة بقسم التجويد ---
-        
-        // IDs حقول نموذج التجويد
-        const tajweedFieldIds = [
-            't-halaqaNum', 't-groupName', 't-team', 't-level', 't-date', 't-timeFrom', 't-timeTo',
-            't-p1', 't-p2', 't-p3',
-            'surah-name-input', 't-hifzPage', 't-hifzAyahFrom', 't-hifzAyahTo', 'word-meanings-output',
-            't-nextSurah', 't-nextAyahs', 't-nextReview', 't-nextAhkam', 't-supervisorNotes'
-        ];
-
-        // حفظ بيانات التطبيق بالكامل
+        // --- 2. دوال إدارة البيانات ---
         function saveAppData() {
             localStorage.setItem(APP_DATA_KEY, JSON.stringify(appData));
+            console.log("Data Saved:", appData);
         }
 
-        // تحميل بيانات التطبيق بالكامل
         function loadAppData() {
             const savedData = localStorage.getItem(APP_DATA_KEY);
             if (savedData) {
                 appData = JSON.parse(savedData);
-                // التأكد من وجود هيكل بيانات التجويد الجديد
-                if (!appData.tajweed || !appData.tajweed.preparations) {
-                    appData.tajweed = getDefaultData().tajweed;
-                }
+                appData.tajweed = appData.tajweed || getDefaultData().tajweed;
+                appData.university = appData.university || getDefaultData().university;
+                appData.tarawih = appData.tarawih || getDefaultData().tarawih;
+                appData.planning = appData.planning || getDefaultData().planning;
             } else {
                 appData = getDefaultData();
             }
+            console.log("Data Loaded:", appData);
         }
 
-        // تحميل تحضير معين في النموذج
+        // --- 3. دوال خاصة بقسم التجويد ---
+        
+        const tajweedFieldIds = [
+            't-halaqaNum', 't-groupName', 't-team', 't-level', 't-date', 't-timeFrom', 't-timeTo',
+            't-p1', 't-p2', 't-p3',
+            'surah-number-input', 't-hifzPage', 't-hifzAyahFrom', 't-hifzAyahTo', 'word-meanings-output',
+            't-nextSurah', 't-nextAyahs', 't-nextReview', 't-nextAhkam', 't-supervisorNotes'
+        ];
+
         function loadPreparation(prepId) {
             let prep = null;
             if (prepId) {
@@ -531,27 +641,21 @@
             }
 
             if (prep) {
-                // تحميل البيانات الموجودة
                 tajweedFieldIds.forEach(id => {
                     const el = document.getElementById(id);
-                    if (el && prep[id]) {
-                        el.value = prep[id];
-                    }
+                    if (el) { el.value = prep[id] || ''; }
                 });
                 appData.tajweed.currentPrepId = prepId;
             } else {
-                // تحضير جديد (تفريغ الحقول)
                 tajweedFieldIds.forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = '';
                 });
                 appData.tajweed.currentPrepId = null;
-                // ضبط التاريخ الافتراضي للتحضير الجديد
                 document.getElementById('t-date').valueAsDate = new Date();
             }
         }
 
-        // حفظ التحضير المفتوح حالياً
         function saveCurrentPreparation() {
             let currentId = appData.tajweed.currentPrepId;
             let prep = null;
@@ -561,104 +665,272 @@
             }
 
             if (!prep) {
-                // تحضير جديد
                 prep = { id: Date.now() };
                 appData.tajweed.preparations.push(prep);
                 appData.tajweed.currentPrepId = prep.id;
             }
 
-            // تحديث/ملء بيانات التحضير
             tajweedFieldIds.forEach(id => {
                 const el = document.getElementById(id);
-                if (el) {
-                    prep[id] = el.value;
-                }
+                if (el) { prep[id] = el.value; }
             });
 
             saveAppData();
             showToast('تم حفظ التحضير بنجاح!', 'success');
-            // تحديث واجهة المشرف (إذا كانت مفتوحة)
             renderSupervisorPage();
         }
-        
-        // --- (جديد) دوال واجهة المشرف (Supervisor) ---
-        const bookContainer = document.getElementById('supervisor-book-container');
-        const prevBtn = document.getElementById('prev-page-btn');
-        const nextBtn = document.getElementById('next-page-btn');
-        const pageCounter = document.getElementById('page-counter');
-        let currentPageIndex = 0;
+
+        async function fetchMeanings() {
+            const surahNum = document.getElementById('surah-number-input').value;
+            const ayahFrom = document.getElementById('t-hifzAyahFrom').value;
+            const ayahTo = document.getElementById('t-hifzAyahTo').value;
+            const outputEl = document.getElementById('word-meanings-output');
+
+            if (!surahNum || !ayahFrom || !ayahTo) {
+                outputEl.value = "يرجى إدخال رقم السورة وبداية ونهاية الآيات.";
+                return;
+            }
+            
+            outputEl.value = "جاري جلب التفسير الميسر...";
+            
+            let allTafseers = [];
+            const tafseerId = 16; 
+
+            try {
+                for (let i = parseInt(ayahFrom); i <= parseInt(ayahTo); i++) {
+                    const url = `https://api.quran.com/api/v4/tafsirs/${tafseerId}/by_ayah/${surahNum}:${i}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`خطأ في جلب الآية ${i}`);
+                    }
+                    const data = await response.json();
+                    
+                    if (data.tafsir.text) {
+                        const text = data.tafsir.text.replace(/<[^>]*>/g, '');
+                        allTafseers.push(`آية (${i}): ${text}`);
+                    }
+                }
+                
+                if (allTafseers.length > 0) {
+                    outputEl.value = allTafseers.join('\n\n');
+                } else {
+                    outputEl.value = "لم يتم العثور على تفسير لهذه الآيات.";
+                }
+                
+            } catch (error) {
+                console.error("Error fetching tafseer:", error);
+                outputEl.value = `حدث خطأ: ${error.message}\nتأكد من صحة رقم السورة والآيات.`;
+            }
+            
+            saveCurrentPreparation();
+        }
+
+        // --- 4. دوال واجهة المشرف (التقليب الداخلي) ---
+        const innerBookContainer = document.getElementById('supervisor-book-container');
+        const innerPrevBtn = document.getElementById('prev-page-btn-inner');
+        const innerNextBtn = document.getElementById('next-page-btn-inner');
+        const innerPageCounter = document.getElementById('page-counter-inner');
+        let innerCurrentPageIndex = 0;
 
         function renderSupervisorPage() {
-            bookContainer.innerHTML = ''; // تفريغ الدفتر
+            innerBookContainer.innerHTML = '';
             const preps = appData.tajweed.preparations;
 
             if (preps.length === 0) {
-                bookContainer.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400">لا توجد تحضيرات محفوظة لعرضها.</p>`;
-                pageCounter.textContent = '';
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
+                innerBookContainer.innerHTML = `<p class="text-center text-gray-400 light:text-gray-500">لا توجد تحضيرات محفوظة لعرضها.</p>`;
+                innerPageCounter.textContent = '';
+                innerPrevBtn.style.display = 'none';
+                innerNextBtn.style.display = 'none';
                 return;
             }
 
-            prevBtn.style.display = 'block';
-            nextBtn.style.display = 'block';
+            innerPrevBtn.style.display = 'block';
+            innerNextBtn.style.display = 'block';
 
             preps.forEach((prep, index) => {
                 const pageEl = document.createElement('div');
-                pageEl.className = 'book-page';
-                if (index === currentPageIndex) pageEl.classList.add('active');
-                if (index < currentPageIndex) pageEl.classList.add('flipped');
+                pageEl.className = 'inner-book-page'; // (تعديل) كلاس التقليب الداخلي
+                if (index === innerCurrentPageIndex) pageEl.classList.add('active');
+                if (index < innerCurrentPageIndex) pageEl.classList.add('flipped');
                 pageEl.dataset.index = index;
                 
-                // تصميم الصفحة كبطاقة (مع الحفاظ على تصميم الدفتر في الوضع الفاتح)
                 pageEl.innerHTML = `
                     <div class="page-content-wrapper front">
-                        <div class="notebook-page p-6 bg-white dark:bg-dark-card rounded-lg shadow-lg h-full overflow-auto">
-                            <h3 class="font-amiri text-xl font-bold">مراجعة تحضير: ${prep['t-groupName'] || 'غير محدد'}</h3>
+                        <div class="notebook-page p-6 bg-dark-card light:bg-white rounded-lg shadow-lg h-full overflow-auto">
+                            <h3 class="font-amiri text-xl font-bold">مراجعة: ${prep['t-groupName'] || 'تحضير'}</h3>
                             <p class="text-sm text-gray-500 mb-4">التاريخ: ${prep['t-date'] || 'غير محدد'}</p>
                             
-                            <!-- عرض مختصر للبيانات (لأغراض المراجعة) -->
                             <div class="mb-4">
-                                <strong class="text-primary-text dark:text-accent">الحفظ الجديد:</strong>
-                                <span>سورة ${prep['surah-name-input'] || '?'} (من ${prep['t-hifzAyahFrom'] || '?'} إلى ${prep['t-hifzAyahTo'] || '?'})</span>
+                                <strong class="text-accent light:text-primary-text">الحفظ:</strong>
+                                <span>${prep['surah-number-input'] || '?'} (آية ${prep['t-hifzAyahFrom'] || '?'} إلى ${prep['t-hifzAyahTo'] || '?'})</span>
                             </div>
                             <div class="mb-4">
-                                <strong class="text-primary-text dark:text-accent">الأحكام:</strong>
-                                <p class="text-sm p-2 bg-gray-100 dark:bg-gray-800 rounded">${prep['t-p2'] || '...'}</p>
+                                <strong class="text-accent light:text-primary-text">الأحكام:</strong>
+                                <p class="text-sm p-2 bg-gray-800 light:bg-gray-100 rounded">${prep['t-p2'] || '...'}</p>
                             </div>
                             
-                            <!-- خانة ملاحظات المشرف -->
                             <h4 class="font-amiri text-lg font-bold mt-6 mb-2">ملاحظات المشرف (تفاعلي)</h4>
-                            <textarea id="supervisor-note-${prep.id}" class="form-input" rows="4" placeholder="اكتب ملاحظاتك هنا...">${prep['t-supervisorNotes'] || ''}</textarea>
-                            <button class="save-note-btn mt-2 bg-success text-black px-3 py-1 rounded text-sm font-semibold" data-prep-id="${prep.id}">
-                                حفظ الملاحظة
-                            </button>
+                            <textarea class="supervisor-note-input form-input" data-prep-id="${prep.id}" rows="4" placeholder="اكتب ملاحظاتك هنا...">${prep['t-supervisorNotes'] || ''}</textarea>
                         </div>
                     </div>
                 `;
-                bookContainer.appendChild(pageEl);
+                innerBookContainer.appendChild(pageEl);
             });
 
-            updatePageFlip();
+            applyInputStyles();
+            updateInnerPageFlip();
         }
 
-        function updatePageFlip() {
-            const pages = bookContainer.querySelectorAll('.book-page');
+        function updateInnerPageFlip() {
+            const pages = innerBookContainer.querySelectorAll('.inner-book-page');
             pages.forEach((page, index) => {
                 page.classList.remove('active', 'flipped');
-                if (index < currentPageIndex) {
+                if (index < innerCurrentPageIndex) {
                     page.classList.add('flipped');
-                } else if (index === currentPageIndex) {
+                } else if (index === innerCurrentPageIndex) {
                     page.classList.add('active');
                 }
             });
-            pageCounter.textContent = `صفحة ${currentPageIndex + 1} من ${appData.tajweed.preparations.length}`;
-            // إظهار/إخفاء الأزرار
-            prevBtn.disabled = currentPageIndex === 0;
-            nextBtn.disabled = currentPageIndex === appData.tajweed.preparations.length - 1;
+            innerPageCounter.textContent = `صفحة ${innerCurrentPageIndex + 1} من ${appData.tajweed.preparations.length}`;
+            innerPrevBtn.disabled = innerCurrentPageIndex === 0;
+            innerNextBtn.disabled = innerCurrentPageIndex === appData.tajweed.preparations.length - 1;
         }
 
-        // --- (جديد) دوال التاريخ في الهيدر ---
+        // --- 5. دوال قسم الجامعة (File Upload) ---
+        const subjectsContainer = document.getElementById('subjects-container');
+
+        function renderUniversitySubjects() {
+            subjectsContainer.innerHTML = '';
+            if (appData.university.subjects.length === 0) {
+                subjectsContainer.innerHTML = `<p class="text-gray-400 light:text-gray-500 col-span-full text-center">لم تقم بإضافة مواد بعد.</p>`;
+            }
+            
+            appData.university.subjects.forEach(subject => {
+                const card = document.createElement('div');
+                card.className = 'p-4 bg-dark-card light:bg-white rounded-lg shadow-md flex flex-col';
+                
+                let filesHTML = '<p class="text-sm text-gray-400 light:text-gray-500">لا توجد ملفات بعد.</p>';
+                if (subject.files && subject.files.length > 0) {
+                    filesHTML = subject.files.map(file => `
+                        <div class="flex justify-between items-center p-2 bg-gray-700 light:bg-gray-50 rounded cursor-pointer open-viewer-btn" data-subject-id="${subject.id}" data-file-id="${file.id}">
+                            <span>${file.type.startsWith('audio') ? '🎧' : '📄'} ${file.name}</span>
+                            <button class="text-sm text-blue-500 hover:text-blue-700">فتح</button>
+                        </div>
+                    `).join('');
+                }
+
+                card.innerHTML = `
+                    <h3 class="font-amiri text-xl font-bold text-accent light:text-primary-text mb-3">${subject.name}</h3>
+                    <div class="file-list space-y-2 mb-3 flex-1">
+                        ${filesHTML}
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="file" class="hidden file-input-pdf" accept="application/pdf" data-subject-id="${subject.id}">
+                        <button class="add-pdf-btn flex-1 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">إضافة PDF</button>
+                        
+                        <input type="file" class="hidden file-input-audio" accept="audio/*" data-subject-id="${subject.id}">
+                        <button class="add-audio-btn flex-1 bg-purple-500 text-white px-3 py-1 rounded text-sm hover:bg-purple-600">إضافة صوتي</button>
+                    </div>
+                `;
+                subjectsContainer.appendChild(card);
+            });
+        }
+        
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            const subjectId = parseInt(e.target.dataset.subjectId);
+            if (!file || !subjectId) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const dataUrl = event.target.result;
+                const fileData = { id: Date.now(), name: file.name, type: file.type, dataUrl: dataUrl };
+                const subject = appData.university.subjects.find(s => s.id === subjectId);
+                if (subject) {
+                    if (!subject.files) subject.files = [];
+                    subject.files.push(fileData);
+                    saveAppData();
+                    renderUniversitySubjects();
+                    showToast('تم رفع الملف بنجاح!', 'success');
+                }
+            };
+            reader.onerror = () => showToast('فشل قراءة الملف', 'error');
+            reader.readAsDataURL(file);
+        }
+
+        // --- 6. دوال قسم التراويح ---
+        const tarawihGrid = document.getElementById('tarawih-grid');
+
+        function renderTarawihGrid() {
+            tarawihGrid.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const isLastTen = i > 20;
+                const dayData = appData.tarawih[i] || {};
+                
+                const dayCard = document.createElement('div');
+                dayCard.className = 'p-4 bg-gray-800 light:bg-gray-50 rounded-lg border border-gray-700 light:border-gray-200';
+                dayCard.innerHTML = `
+                    <h4 class="font-amiri font-bold text-lg text-accent light:text-primary-text mb-2">اليوم ${i}</h4>
+                    <div class="space-y-2">
+                        <input type="text" value="${dayData.mosque || ''}" class="form-input tarawih-input" data-day="${i}" data-key="mosque" placeholder="المسجد (التراويح)">
+                        <input type="date" value="${dayData.date || ''}" class="form-input tarawih-input" data-day="${i}" data-key="date">
+                        ${isLastTen ? `
+                        <div class="mt-3 pt-3 border-t border-dashed border-accent">
+                            <h5 class="text-sm font-semibold text-accent mb-1">صلاة التهجد</h5>
+                            <input type="text" value="${dayData.tahajjud || ''}" class="form-input tarawih-input" data-day="${i}" data-key="tahajjud" placeholder="المسجد (التهجد)">
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                tarawihGrid.appendChild(dayCard);
+            }
+            applyInputStyles();
+        }
+
+        // --- 7. دوال قسم التخطيط ---
+        const planningWeek = document.getElementById('planning-week');
+        const daysOfWeek = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+
+        function renderPlanningWeek() {
+            planningWeek.innerHTML = '';
+            daysOfWeek.forEach(day => {
+                if (!appData.planning[day]) appData.planning[day] = { tasks: [] };
+                while (appData.planning[day].tasks.length < 5) {
+                    appData.planning[day].tasks.push({ text: '', done: false });
+                }
+
+                const tasksHTML = appData.planning[day].tasks.map((task, index) => 
+                    addTaskElement(day, index, task)
+                ).join('');
+
+                const dayCard = document.createElement('div');
+                dayCard.className = 'p-4 bg-gray-800 light:bg-gray-50 rounded-lg';
+                dayCard.innerHTML = `
+                    <h3 class="font-amiri text-xl font-bold text-accent light:text-primary-text mb-3">${day}</h3>
+                    <div class="task-list space-y-2" data-day="${day}">
+                        ${tasksHTML}
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <input type="text" class="form-input new-task-input" placeholder="مهمة جديدة...">
+                        <button class="add-task-btn bg-accent text-white px-3 py-1 rounded hover:opacity-90" data-day="${day}">إضافة</button>
+                    </div>
+                `;
+                planningWeek.appendChild(dayCard);
+            });
+            applyInputStyles();
+        }
+        
+        function addTaskElement(day, index, task) {
+            return `
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" ${task.done ? 'checked' : ''} class="h-5 w-5 rounded text-accent focus:ring-accent planning-task-check" data-day="${day}" data-index="${index}">
+                    <input type="text" value="${task.text || ''}" class="form-input task-text ${task.done ? 'line-through' : ''} planning-task-text" data-day="${day}" data-index="${index}" placeholder="مهمة...">
+                </div>
+            `;
+        }
+
+        // --- 8. دوال مساعدة (التاريخ، التنبيهات، العارض) ---
+
         function setHeaderDates() {
             try {
                 const today = new Date();
@@ -666,337 +938,261 @@
                 const hijri = new Intl.DateTimeFormat('ar-EG-u-ca-islamic', { dateStyle: 'long', timeZone: 'Africa/Cairo' }).format(today);
                 document.getElementById('header-dates').textContent = `${gregorian} | ${hijri}`;
             } catch (e) {
-                console.error("Error setting dates (likely unsupported calendar):", e);
-                // fallback
                 const gregorian = new Date().toLocaleDateString('ar-EG', { dateStyle: 'long' });
                 document.getElementById('header-dates').textContent = gregorian;
             }
         }
 
-        // --- (جديد) رسالة التنبيه (Toast) ---
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast-notification');
             const toastMessage = document.getElementById('toast-message');
-            
             toastMessage.textContent = message;
-            toast.className = 'p-3 rounded-lg shadow-lg text-black font-semibold'; // reset
-            
-            if (type === 'success') {
-                toast.classList.add('bg-success');
-            } else if (type === 'error') {
-                toast.classList.add('bg-red-500');
-            } else {
-                toast.classList.add('bg-warning');
-            }
-            
+            toast.className = 'p-3 rounded-lg shadow-lg text-black font-semibold';
+            if (type === 'success') toast.classList.add('bg-success');
+            else if (type === 'error') toast.classList.add('bg-red-500');
+            else toast.classList.add('bg-warning');
             toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000); // إخفاء بعد 3 ثوانٍ
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        const modal = document.getElementById('viewer-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const viewerContent = document.getElementById('viewer-content');
+
+        function openViewer(file) {
+            modalTitle.textContent = file.name;
+            viewerContent.innerHTML = '';
+            if (file.type.startsWith('application/pdf')) {
+                viewerContent.innerHTML = `<iframe src="${file.dataUrl}" class="w-full h-full" title="عارض PDF"></iframe>`;
+            } else if (file.type.startsWith('audio/')) {
+                viewerContent.innerHTML = `<audio controls src="${file.dataUrl}" class="w-full max-w-md my-auto"></audio>`;
+            }
+            modal.classList.remove('hidden');
         }
 
+        // --- (تعديل) 9. دوال تقليب الصفحات الرئيسية ---
+        const mainBookContainer = document.getElementById('main-book-container');
+        const mainPages = document.querySelectorAll('.book-page');
+        
+        // (تعديل) تعريف جميع أزرار التنقل (للدسكتوب والموبايل)
+        const navControls = {
+            prevBtns: [document.getElementById('main-prev-btn'), document.getElementById('main-prev-btn-mobile')],
+            nextBtns: [document.getElementById('main-next-btn'), document.getElementById('main-next-btn-mobile')],
+            counters: [document.getElementById('main-page-counter'), document.getElementById('main-page-counter-mobile')]
+        };
+        
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        let mainCurrentPageIndex = 0;
 
-        // --- عند تحميل الصفحة ---
+        function updateMainPageFlip() {
+            mainPages.forEach((page, index) => {
+                page.classList.remove('active', 'flipped');
+                if (index < mainCurrentPageIndex) {
+                    page.classList.add('flipped');
+                } else if (index === mainCurrentPageIndex) {
+                    page.classList.add('active');
+                }
+            });
+            
+            // تحديث التاب النشط
+            tabButtons.forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.pageIndex) === mainCurrentPageIndex);
+            });
+
+            // (تعديل) تحديث العدادات والأزرار
+            const pageText = `صفحة ${mainCurrentPageIndex + 1}/${mainPages.length}`;
+            navControls.counters.forEach(counter => counter.textContent = pageText);
+            navControls.prevBtns.forEach(btn => btn.disabled = mainCurrentPageIndex === 0);
+            navControls.nextBtns.forEach(btn => btn.disabled = mainCurrentPageIndex === mainPages.length - 1);
+
+            // إطلاق بناء الواجهات عند فتح الصفحة (للتأكد من عمل الحفظ التلقائي)
+            if (mainCurrentPageIndex === 0) loadPreparation(appData.tajweed.currentPrepId);
+            if (mainCurrentPageIndex === 1) { innerCurrentPageIndex = 0; renderSupervisorPage(); }
+            if (mainCurrentPageIndex === 2) renderUniversitySubjects();
+            if (mainCurrentPageIndex === 3) renderTarawihGrid();
+            if (mainCurrentPageIndex === 4) renderPlanningWeek();
+        }
+
+        function goToPage(index) {
+            mainCurrentPageIndex = index;
+            updateMainPageFlip();
+        }
+
+        // --- 10. مشغلات الأحداث الرئيسية (Event Listeners) ---
         document.addEventListener('DOMContentLoaded', () => {
             
-            // تطبيق التنسيقات على المدخلات (بما فيها المدخلات في الأقسام الأخرى)
-            applyInputStyles();
+            // --- 1. منطق صفحة الانترو ---
+            const introPage = document.getElementById('intro-page');
+            const startBtn = document.getElementById('start-journey-btn');
             
-            // ** (تم التعديل) **
-            // تحميل البيانات
-            loadAppData(); // تحميل كل البيانات
-            loadOtherData(); // تحميل بيانات الأقسام القديمة
-            
-            // تحديد أي تحضير سيتم عرضه في قسم التجويد
-            if (appData.tajweed.preparations.length > 0) {
-                // تحميل آخر تحضير محفوظ
-                loadPreparation(appData.tajweed.preparations[appData.tajweed.preparations.length - 1].id);
-            } else {
-                // أو فتح تحضير جديد
-                loadPreparation(null);
+            if (localStorage.getItem('visited') === 'true') {
+                introPage.style.display = 'none';
             }
 
-            // --- 1. منطق الوضع الداكن ---
-            const darkModeToggles = [document.getElementById('darkModeToggle'), document.getElementById('darkModeToggleMobile')];
+            startBtn.addEventListener('click', () => {
+                introPage.style.opacity = '0';
+                setTimeout(() => {
+                    introPage.style.display = 'none';
+                }, 1000); 
+                localStorage.setItem('visited', 'true');
+            });
+            
+            // --- 2. تحميل البيانات وإعداد الواجهة ---
+            loadAppData();
+            
+            // (تعديل) إطلاق أول صفحة فقط
+            goToPage(0);
+            applyInputStyles();
+            
+            // --- 3. إعداد الوضع الداكن/النهاري ---
+            const darkModeToggle = document.getElementById('darkModeToggle');
             const sunIcons = document.querySelectorAll('.sun-icon');
             const moonIcons = document.querySelectorAll('.moon-icon');
 
-            const updateIcons = (isDark) => {
-                sunIcons.forEach(icon => icon.style.display = isDark ? 'inline' : 'none');
-                moonIcons.forEach(icon => icon.style.display = isDark ? 'none' : 'inline');
+            const updateIcons = (isLight) => {
+                sunIcons.forEach(icon => icon.style.display = isLight ? 'none' : 'inline'); 
+                moonIcons.forEach(icon => icon.style.display = isLight ? 'inline' : 'none');
             };
 
-            const setMode = (isDark) => {
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                }
-                updateIcons(isDark);
+            const setMode = (isLight) => {
+                document.documentElement.classList.toggle('light', isLight);
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                updateIcons(isLight);
             };
 
-            darkModeToggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    setMode(!document.documentElement.classList.contains('dark'));
-                });
-            });
+            darkModeToggle.addEventListener('click', () => setMode(!document.documentElement.classList.contains('light')));
+            setMode(localStorage.getItem('theme') === 'light');
+            setHeaderDates();
 
-            const savedTheme = localStorage.getItem('theme');
-            setMode(savedTheme === 'dark'); // الوضع الافتراضي هو الفاتح (ما لم يحفظ كداكن)
-
-            // --- 2. منطق التبويبات (Tabs) ---
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const pages = document.querySelectorAll('.page-content');
-
+            // --- 4. إعداد التبويبات (Tabs) للتقليب ---
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
-
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    pages.forEach(page => {
-                        page.classList.toggle('hidden', page.id !== tabId);
-                    });
-
-                    // (جديد) عند فتح تبويب المشرف، قم بتحديثه
-                    if (tabId === 'supervisor') {
-                        currentPageIndex = 0; // ابدأ من الصفحة الأولى
-                        renderSupervisorPage();
-                    }
-                    // (جديد) عند الرجوع لتبويب التحضير، أعد تحميل التحضير الحالي
-                    if (tabId === 'tajweed') {
-                        loadPreparation(appData.tajweed.currentPrepId);
-                    }
+                    goToPage(parseInt(button.dataset.pageIndex));
                 });
             });
 
-            // --- 3. منطق قسم التجويد (محدّث) ---
+            // --- 5. أزرار التقليب الرئيسية (للدسكتوب والموبايل) ---
+            navControls.prevBtns.forEach(btn => btn.addEventListener('click', () => { if (mainCurrentPageIndex > 0) goToPage(mainCurrentPageIndex - 1); }));
+            navControls.nextBtns.forEach(btn => btn.addEventListener('click', () => { if (mainCurrentPageIndex < mainPages.length - 1) goToPage(mainCurrentPageIndex + 1); }));
+
+
+            // --- 6. أحداث قسم التجويد ---
             document.getElementById('save-prep-btn').addEventListener('click', saveCurrentPreparation);
-            
             document.getElementById('new-prep-btn').addEventListener('click', () => {
-                // اسأل أولاً إذا كان يريد الحفظ
-                if (confirm('هل تريد حفظ التحضير الحالي قبل البدء بجديد؟ (إذا لم تحفظه، لن يتم حفظ التغييرات الأخيرة)')) {
-                    saveCurrentPreparation();
-                }
-                loadPreparation(null); // فتح صفحة جديدة
+                saveCurrentPreparation();
+                loadPreparation(null);
                 showToast('تم فتح صفحة تحضير جديدة', 'warning');
             });
-
-            const surahInput = document.getElementById('surah-name-input');
-            const meaningsOutput = document.getElementById('word-meanings-output');
+            document.getElementById('fetch-meanings-btn').addEventListener('click', fetchMeanings);
             
-            surahInput.addEventListener('blur', () => {
-                const surahName = surahInput.value.trim();
-                if (MOCK_MEANINGS[surahName]) {
-                    meaningsOutput.value = MOCK_MEANINGS[surahName];
-                } else if(surahName) {
-                    meaningsOutput.value = `(لا توجد معانٍ تجريبية لسورة "${surahName}")`;
+            let saveTimer;
+            document.getElementById('tajweed').addEventListener('change', (e) => {
+                 if (e.target.classList.contains('form-input')) {
+                     clearTimeout(saveTimer);
+                     saveTimer = setTimeout(saveCurrentPreparation, 1000); 
+                 }
+            });
+            document.getElementById('share-whatsapp-btn').addEventListener('click', async () => {
+                showToast('جاري تحضير الصورة...', 'warning');
+                const prepElement = document.getElementById('tajweed-form-container');
+                const isLight = document.documentElement.classList.contains('light');
+                let bgColor = isLight ? '#f5deb3' : '#2a2a2a'; 
+                
+                try {
+                    const canvas = await html2canvas(prepElement, { scale: 2, useCORS: true, backgroundColor: bgColor });
+                    canvas.toBlob(async (blob) => {
+                        const file = new File([blob], "tajweed_prep.png", { type: "image/png" });
+                        const shareData = { files: [file], title: "تحضير حلقة التجويد", text: "مرفق تحضير..." };
+
+                        if (navigator.canShare && navigator.canShare(shareData)) {
+                            await navigator.share(shareData);
+                        } else {
+                            const dataUrl = canvas.toDataURL('image/png');
+                            const link = document.createElement('a');
+                            link.href = dataUrl;
+                            link.download = 'tajweed_prep.png';
+                            link.click();
+                            showToast('تم تنزيل الصورة. يرجى إرسالها يدويًا.', 'warning');
+                        }
+                    }, 'image/png');
+                } catch (err) {
+                    console.error('Error generating canvas:', err);
+                    showToast('خطأ في توليد الصورة', 'error');
                 }
-                // (الحفظ يتم الآن عبر الزر الرئيسي)
             });
 
-            // (مشاركة واتساب لم تتغير)
-            document.getElementById('share-whatsapp-btn').addEventListener('click', () => {
-                // ... (نفس الكود السابق)
-            });
-
-            // --- (جديد) منطق مراجعة المشرف ---
-            prevBtn.addEventListener('click', () => {
-                if (currentPageIndex > 0) {
-                    currentPageIndex--;
-                    updatePageFlip();
-                }
-            });
-            nextBtn.addEventListener('click', () => {
-                if (currentPageIndex < appData.tajweed.preparations.length - 1) {
-                    currentPageIndex++;
-                    updatePageFlip();
-                }
-            });
+            // --- 7. أحداث قسم مراجعة المشرف (الداخلي) ---
+            innerPrevBtn.addEventListener('click', () => { if (innerCurrentPageIndex > 0) { innerCurrentPageIndex--; updateInnerPageFlip(); } });
+            innerNextBtn.addEventListener('click', () => { if (innerCurrentPageIndex < appData.tajweed.preparations.length - 1) { innerCurrentPageIndex++; updateInnerPageFlip(); } });
             
-            // حفظ ملاحظة المشرف (باستخدام تفويض الأحداث)
-            bookContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('save-note-btn')) {
+            innerBookContainer.addEventListener('change', (e) => {
+                if (e.target.classList.contains('supervisor-note-input')) {
                     const prepId = parseInt(e.target.dataset.prepId);
-                    const note = document.getElementById(`supervisor-note-${prepId}`).value;
-                    
-                    // تحديث البيانات
                     const prep = appData.tajweed.preparations.find(p => p.id === prepId);
-                    if (prep) {
-                        prep['t-supervisorNotes'] = note;
-                        saveAppData();
-                        showToast('تم حفظ ملاحظة المشرف!', 'success');
+                    if (prep) { prep['t-supervisorNotes'] = e.target.value; saveAppData(); showToast('تم حفظ الملاحظة', 'success'); }
+                }
+            });
+
+            // --- 8. أحداث قسم الجامعة ---
+            document.getElementById('add-subject-btn').addEventListener('click', () => {
+                const subjectName = prompt('ما هو اسم المادة الجديدة؟');
+                if (subjectName && subjectName.trim() !== '') {
+                    appData.university.subjects.push({ id: Date.now(), name: subjectName, files: [] });
+                    saveAppData(); renderUniversitySubjects();
+                }
+            });
+            subjectsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-pdf-btn')) { e.target.previousElementSibling.click(); }
+                if (e.target.classList.contains('add-audio-btn')) { e.target.previousElementSibling.click(); }
+                if (e.target.closest('.open-viewer-btn')) {
+                    const btn = e.target.closest('.open-viewer-btn');
+                    const subjectId = parseInt(btn.dataset.subjectId);
+                    const fileId = parseInt(btn.dataset.fileId);
+                    const subject = appData.university.subjects.find(s => s.id === subjectId);
+                    const file = subject.files.find(f => f.id === fileId);
+                    if(file) openViewer(file);
+                }
+            });
+            subjectsContainer.addEventListener('change', (e) => {
+                if (e.target.classList.contains('file-input-pdf') || e.target.classList.contains('file-input-audio')) {
+                    handleFileUpload(e);
+                }
+            });
+
+            // --- 9. أحداث قسم التراويح (حفظ تلقائي) ---
+            tarawihGrid.addEventListener('change', (e) => {
+                if (e.target.classList.contains('tarawih-input')) {
+                    const day = e.target.dataset.day; const key = e.target.dataset.key;
+                    if (!appData.tarawih[day]) appData.tarawih[day] = {};
+                    appData.tarawih[day][key] = e.target.value; saveAppData();
+                }
+            });
+
+            // --- 10. أحداث قسم التخطيط (حفظ تلقائي) ---
+            planningWeek.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-task-btn')) {
+                    const day = e.target.dataset.day; const input = e.target.previousElementSibling;
+                    const text = input.value.trim();
+                    if (text) { 
+                        // إضافة مهمة جديدة بدلاً من استبدال فارغة
+                        appData.planning[day].tasks.push({ text: text, done: false }); 
+                        saveAppData(); 
+                        renderPlanningWeek(); 
+                        input.value = ''; 
                     }
                 }
             });
-
-            // --- 4. منطق قسم الجامعة (لم يتغير) ---
-            const subjectsContainer = document.getElementById('subjects-container');
-            document.getElementById('add-subject-btn').addEventListener('click', () => {
-                const subjectName = prompt('ما هو اسم المادة الجديدة؟');
-                if (subjectName) {
-                    addSubjectCard(subjectName);
-                }
+            planningWeek.addEventListener('change', (e) => {
+                const day = e.target.dataset.day; const index = e.target.dataset.index;
+                if (!day || !index) return; const task = appData.planning[day].tasks[index]; if (!task) return;
+                if (e.target.classList.contains('planning-task-check')) { task.done = e.target.checked; e.target.nextElementSibling.classList.toggle('line-through', task.done); }
+                if (e.target.classList.contains('planning-task-text')) { task.text = e.target.value; }
+                saveAppData();
             });
 
-            function addSubjectCard(name) {
-                // ... (نفس الكود السابق)
-                const card = document.createElement('div');
-                card.className = 'p-4 bg-white dark:bg-dark-card rounded-lg shadow-md';
-                card.innerHTML = `
-                    <h3 class="font-amiri text-xl font-bold text-primary-text dark:text-accent mb-3">${name}</h3>
-                    <div class="space-y-2 mb-3">
-                        <p class="text-sm text-gray-500">لا توجد ملفات بعد.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="add-item-btn bg-blue-500 text-white px-3 py-1 rounded text-sm" data-type="pdf">إضافة PDF</button>
-                        <button class="add-item-btn bg-purple-500 text-white px-3 py-1 rounded text-sm" data-type="audio">إضافة صوتي</button>
-                    </div>
-                `;
-                subjectsContainer.appendChild(card);
-            }
-            
-            subjectsContainer.addEventListener('click', (e) => {
-                // ... (نفس الكود السابق)
-            });
-
-            // --- 5. منطق العارض المنبثق (Modal) (لم يتغير) ---
-            const modal = document.getElementById('viewer-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const viewerContent = document.getElementById('viewer-content');
-            const studyNotes = document.getElementById('study-notes');
-
-            function openViewer(name, type) {
-                // ... (نفس الكود السابق)
-            }
-            
+            // --- 11. إغلاق العارض (Modal) ---
             document.getElementById('close-modal-btn').addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-
-            // --- 6. منطق قسم التراويح (لم يتغير) ---
-            const tarawihGrid = document.getElementById('tarawih-grid');
-            for (let i = 1; i <= 30; i++) {
-                // ... (نفس الكود السابق)
-                const isLastTen = i > 20;
-                const dayCard = document.createElement('div');
-                dayCard.className = 'p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700';
-                dayCard.innerHTML = `
-                    <h4 class="font-amiri font-bold text-lg text-primary-text dark:text-accent mb-2">اليوم ${i}</h4>
-                    <div class="space-y-2">
-                        <input type="text" data-save="tarawih.${i}.mosque" class="form-input" placeholder="المسجد (التراويح)">
-                        <input type="date" data-save="tarawih.${i}.date" class="form-input">
-                        ${isLastTen ? `
-                        <div class="mt-3 pt-3 border-t border-dashed border-accent">
-                            <h5 class="text-sm font-semibold text-accent mb-1">صلاة التهجد</h5>
-                            <input type="text" data-save="tarawih.${i}.tahajjud" class="form-input" placeholder="المسجد (التهجد)">
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-                tarawihGrid.appendChild(dayCard);
-            }
-
-            // --- 7. منطق قسم التخطيط اليومي (لم يتغير) ---
-            const planningWeek = document.getElementById('planning-week');
-            const daysOfWeek = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
-            
-            daysOfWeek.forEach(day => {
-                // ... (نفس الكود السابق)
-                const dayCard = document.createElement('div');
-                dayCard.className = 'p-4 bg-gray-50 dark:bg-gray-800 rounded-lg';
-                dayCard.innerHTML = `
-                    <h3 class="font-amiri text-xl font-bold text-primary-text dark:text-accent mb-3">${day}</h3>
-                    <div class="task-list space-y-2" data-day="${day}">
-                    </div>
-                    <div class="flex gap-2 mt-3">
-                        <input type="text" class="form-input new-task-input" placeholder="مهمة جديدة...">
-                        <button class="add-task-btn bg-accent text-white px-3 py-1 rounded hover:opacity-90">إضافة</button>
-                    </div>
-                `;
-                planningWeek.appendChild(dayCard);
-                for(let i=0; i<5; i++) { 
-                     addTaskElement(dayCard.querySelector('.task-list'), day, i);
-                }
-            });
-
-            function addTaskElement(list, day, index, text = '') {
-                // ... (نفس الكود السابق)
-                const taskItem = document.createElement('div');
-                taskItem.className = 'flex items-center gap-2';
-                taskItem.innerHTML = `
-                    <input type="checkbox" data-save="planning.${day}.task${index}.done" class="h-5 w-5 rounded text-accent focus:ring-accent">
-                    <input type="text" value="${text}" data-save="planning.${day}.task${index}.text" class="form-input task-text" placeholder="مهمة...">
-                `;
-                list.appendChild(taskItem);
-                
-                taskItem.querySelectorAll('.form-input').forEach(applyInputStyles);
-                
-                const checkbox = taskItem.querySelector('input[type="checkbox"]');
-                const textInput = taskItem.querySelector('.task-text');
-                checkbox.addEventListener('change', () => {
-                    textInput.classList.toggle('line-through', checkbox.checked);
-                    // (الحفظ الآن يتم عبر الدالة العامة)
-                });
-                textInput.classList.toggle('line-through', checkbox.checked);
-            }
-            
-            planningWeek.addEventListener('click', (e) => {
-                // ... (نفس الكود السابق)
-            });
-
-            // --- 8. الحفظ التلقائي (محدّث) ---
-            document.body.addEventListener('change', (e) => {
-                if (e.target.matches('[data-save]')) {
-                    // (هذا يجب أن يُعاد كتابته ليستخدم appData بشكل صحيح)
-                    // (سنبقيه كما هو للأقسام الأخرى كحل مؤقت)
-                    saveOtherDataLegacy();
-                }
-            });
-            
-            // دالة الحفظ القديمة (مؤقت)
-            function saveOtherDataLegacy() {
-                 const data = JSON.parse(localStorage.getItem(APP_DATA_KEY) || '{}');
-                 document.querySelectorAll('[data-save]').forEach(el => {
-                     const key = el.getAttribute('data-save');
-                     if (!key.startsWith('tajweed.')) { // لا تحفظ التجويد هنا
-                        data[key] = el.value;
-                     }
-                 });
-                 localStorage.setItem(APP_DATA_KEY, JSON.stringify(data));
-            }
-            
-            // دالة التحميل القديمة (مؤقت)
-            function loadOtherDataLegacy() {
-                const data = JSON.parse(localStorage.getItem(APP_DATA_KEY) || '{}');
-                document.querySelectorAll('[data-save]').forEach(el => {
-                    const key = el.getAttribute('data-save');
-                     if (!key.startsWith('tajweed.')) {
-                        if (data[key]) {
-                            el.value = data[key];
-                        }
-                     }
-                });
-            }
-
-            // (جديد) تحميل التاريخ في الهيدر
-            setHeaderDates();
-            
-            // (جديد) إعادة تحميل البيانات وتطبيق التنسيقات
-            loadOtherDataLegacy(); // تحميل الأقسام الأخرى
-            applyInputStyles(); // تطبيق التنسيق على كل شيء
-            
-            // تحديث حالة المهام (خط شطب)
-            document.querySelectorAll('.task-list .flex').forEach(item => {
-                 const checkbox = item.querySelector('input[type="checkbox"]');
-                 const textInput = item.querySelector('.task-text');
-                 if(checkbox && textInput) {
-                     textInput.classList.toggle('line-through', checkbox.checked);
-                 }
+                modal.classList.add('hidden'); viewerContent.innerHTML = '';
             });
 
         });
