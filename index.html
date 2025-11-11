@@ -184,7 +184,7 @@
             opacity: 1;
         }
         
-        /* تنسيقات الاستجابة للموبايل */
+        /* --- (تعديل) تنسيقات الاستجابة للموبايل --- */
         @media (max-width: 768px) {
             .tab-btn {
                 padding: 0.75rem 0.5rem;
@@ -245,13 +245,15 @@
             html.light .manhaj-table tr {
                 border-color: var(--tw-color-border-gray-200);
             }
+
+            /* --- (تعديل) إصلاح تنسيق الجدول على الموبايل --- */
             .manhaj-table td {
                 border: none;
                 border-bottom: 1px solid #eee;
                 position: relative;
-                padding-left: 50% !important;
-                padding-right: 0.5rem !important;
-                text-align: left;
+                padding-left: 0.5rem !important; /* تعديل 1: إلغاء الـ padding-left 50% */
+                padding-right: 50% !important; /* تعديل 2: إضافة padding-right 50% (لأننا RTL) */
+                text-align: right; /* تعديل 3: محاذاة النص لليمين (RTL) */
             }
             html.light .manhaj-table td {
                  border-bottom-color: var(--tw-color-sepia-lines);
@@ -262,11 +264,13 @@
                 right: 6px; /* RTL */
                 left: auto;
                 width: 45%;
-                padding-right: 10px;
+                padding-left: 10px; /* تعديل 4: padding-left بدلاً من right */
                 white-space: nowrap;
                 font-weight: bold;
                 text-align: right; /* RTL */
             }
+            /* --- (نهاية التعديل) --- */
+            
             /* عناوين الجدول للموبايل */
             .manhaj-table td:nth-of-type(1):before { content: "الزمن"; }
             .manhaj-table td:nth-of-type(2):before { content: "المنهج"; }
